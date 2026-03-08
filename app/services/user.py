@@ -1,5 +1,6 @@
 from app.models.user import User
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.schemas.user import UserCreate
 from app.core.security import get_password_hash
@@ -18,7 +19,7 @@ class UserService:
             name=user_data.name,
             is_active=True,
             role = user_data.role
-            # is_superuser=False
+
         )
         db_session.add(new_user)
         db_session.flush()

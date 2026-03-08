@@ -22,6 +22,8 @@ def get_admin_token(client):
 
 def test_create_course(client):
 
+
+    
     # Signup admin
     client.post(
         "/api/v1/signup",
@@ -43,7 +45,7 @@ def test_create_course(client):
 
     # Create course
     response = client.post(
-        "/api/v1/create_course",
+        "/api/v1/courses",
         headers={"Authorization": f"Bearer {access_token}"},
         json={
             "title": "Math 101",

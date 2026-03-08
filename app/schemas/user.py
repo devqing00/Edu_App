@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional, Literal
+from uuid import UUID
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -13,9 +14,6 @@ class UserCreate(UserBase):
 
 
 class UserRead(UserBase):
-    id: int
+    id: UUID
     is_active: bool
-    
-    # is_superuser: bool
-
     model_config = ConfigDict(from_attributes=True)

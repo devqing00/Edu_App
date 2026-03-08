@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict #confirm field
 from decimal import Decimal
 from typing import Annotated, Optional
-
+from uuid import UUID
 
 class CourseBase(BaseModel):
     title: str | None = None
@@ -13,7 +13,7 @@ class CourseCreate(CourseBase):
     pass
 
 class CourseRead(CourseBase):
-    id: int
+    id: UUID
 
     model_config = ConfigDict(from_attributes=True)
 

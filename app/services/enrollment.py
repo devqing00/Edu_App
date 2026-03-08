@@ -3,6 +3,7 @@ from app.models.course import Course
 from app.models.user import User
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.schemas.enrollment import EnrollmentCreate
 from app.core.security import get_password_hash
@@ -10,7 +11,7 @@ from app.core.security import get_password_hash
 class EnrollmentService:
 
     @staticmethod
-    def enroll_student(db_session: Session, user_id: int, course_id: int):
+    def enroll_student(db_session: Session, user_id: UUID, course_id: UUID):
         
         user = db_session.query(User).filter(User.id == user_id).first()
         if not user:
@@ -48,10 +49,9 @@ class EnrollmentService:
         db_session.commit()
         db_session.refresh(enrollment)
         return enrollment
-
     
     @staticmethod
-    def deregister_student(db_session: Session, user_id: int, course_id: int):
+    def deregister_student(db_session: Session, user_id: UUID, course_id: UUID):
         
         enrollment = db_session.query(Enrollment).filter(
             Enrollment.user_id == user_id,
@@ -67,7 +67,7 @@ class EnrollmentService:
         return True
 
     @staticmethod
-    def enrollments_for_course(db_session: Session, course_id:int):
+    def enrollments_for_course(db_session: Session, course_id:UUID):
         
         enrollments = db_session.query(Enrollment).filter(
             Enrollment.course_id == course_id
@@ -77,39 +77,3 @@ class EnrollmentService:
             return None
 
         return enrollments
-
-    # @staticmethod
-    # def update_course(db_session: Session, course_id: int,  course_update: CourseUpdate):
-    #     course = db_session.query(Course).filter(Course.id == course_id).first()
-    
-    #     if not course:
-    #         return None
-        
-    #     update_data = course_update.model_dump(exclude_unset=True)
-        
-    #     for key, value in update_data.items():
-    #         setattr(course, key, value)
-        
-    #     db_session.add(course)
-    #     db_session.commit()
-    #     db_session.refresh(course)
-
-    #     return course
-    
-
-    # @staticmethod
-    # def course_status (db_session: Session, course_id: int, is_active: bool):
-    #     course = db_session.query(Course).filter(Course.id == course_id).first()
-
-    #     if not course:
-    #         return None
-
-    #     course.is_active = is_active
-
-        
-    #     db_session.add(course)
-    #     db_session.commit()
-    #     db_session.refresh(course)
-
-    #     return course
-    

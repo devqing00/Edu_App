@@ -26,7 +26,7 @@ def test_user_profile(client):
 
     # 3️⃣ Call protected endpoint
     response = client.get(
-        "/api/v1/me",
+        "/api/v1/users/me",
         headers={"Authorization": f"Bearer {access_token}"}
     )
     print (response.json())   
@@ -34,7 +34,7 @@ def test_user_profile(client):
  
     data = response.json()
     assert data["email"] == "test@example.com"
-    assert data["id"] == 1
+    assert "id" in data
     assert data["is_active"] == True
     assert data["role"] == "student"
     assert data["name"] == "Test User"

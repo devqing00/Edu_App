@@ -4,7 +4,7 @@ from app.schemas.course import CourseCreate, CourseRead, CourseUpdate, CourseSta
 from app.api.deps import get_db, get_current_active_user, get_current_active_admin
 from app.models.course import Course
 from app.services.course import CourseService
-
+from uuid import UUID
 
 router = APIRouter()
 
@@ -22,8 +22,8 @@ def create_course(
 
 @router.get("/", response_model=list[CourseRead])
 def list_courses(
-    limit: int = 10,
     skip: int = 0,
+    limit: int = 10,
     db: Session = Depends(get_db),
 ):
     courses = (
@@ -38,7 +38,7 @@ def list_courses(
 
 @router.get("/{course_id}", response_model=CourseRead)
 def get_course_by_id(
-    course_id: int,
+    course_id: UUID,
     db: Session = Depends(get_db)
 ):
     course = CourseService.get_course(db, course_id)
@@ -53,7 +53,7 @@ def get_course_by_id(
 @router.put("/{course_id}", response_model=CourseRead)
 #diff function name than what is defined in services
 def update_course_by_id(
-    course_id: int,
+    course_id: UUID,
     course_update: CourseUpdate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_active_admin)
@@ -71,7 +71,7 @@ def update_course_by_id(
 @router.patch("/{course_id}", response_model=CourseRead)
 #diff function name than what is defined in services
 def activate_or_deactivate_course(
-    course_id: int,
+    course_id: UUID,
     status_update: CourseStatusUpdate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_active_admin)
@@ -86,3 +86,14 @@ def activate_or_deactivate_course(
             )
     return course
 
+
+@router.delete("/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_course(
+      course_id: UUID,
+      db: Session = Depends(get_db),
+      current_user=Depends(get_current_active_admin)
+  ):
+      course = CourseService.soft_delete_course(db, course_id)
+      if not course:
+          raise HTTPException(status_code=404, detail=f"Course {course_id} not found")
+      

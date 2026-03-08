@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from app.api.v1 import auth, course, user, enrollment
 from app.core.config import settings
 
-
 app = FastAPI(title="FastAPI EDU_APP")
 
 app.include_router(auth.router, prefix=settings.API_V1_STR, tags=["auth"])

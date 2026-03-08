@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from uuid import UUID
+
 from app.schemas.enrollment import EnrollmentCreate, EnrollmentRead
 from app.api.deps import get_db, get_current_active_user, get_current_active_admin
 from app.models.enrollment import Enrollment
@@ -31,15 +33,11 @@ def student_enroll(
 
 @router.get("/", response_model=list[EnrollmentRead])
 def list_enrollments(
-    limit: int = 10,
-    skip: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_admin)
 ):
     enrollments = (
         db.query(Enrollment)  
-        .offset(skip)
-        .limit(limit)
         .all()
     )
 
@@ -48,7 +46,7 @@ def list_enrollments(
 
 @router.get("/by-course/{course_id}", response_model=list[EnrollmentRead], status_code=status.HTTP_200_OK)
 def course_enrollments(
-    course_id: int,
+    course_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_admin)
 ):
@@ -64,7 +62,7 @@ def course_enrollments(
 
 @router.delete("/course/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
 def student_deregister(
-    course_id: int,
+    course_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 

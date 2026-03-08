@@ -4,7 +4,7 @@ print("DATABASE_URL =", os.getenv("DATABASE_URL"))
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "EDU_APP"
+    PROJECT_NAME: str = "THEEDU_APP"
     API_V1_STR: str = "/api/v1"
     DATABASE_URL: str 
 
